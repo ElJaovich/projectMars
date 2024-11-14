@@ -236,6 +236,10 @@ display_mode_end:
 
 config_clock_mode:
 
+    li $v0, 4
+    la $a0, newline
+    syscall
+    
     # Mostrar el estado actual de la configuración de fecha y hora
     li $v0, 4
     la $a0, space
@@ -384,18 +388,39 @@ decrease_param:
 
 # Modo de Configuración de Alarma (2)
 config_alarm_mode:
-    # Mostrar el prompt para ajustar la alarma
+    # Mostrar el estado actual de la configuración de la alarma
     li $v0, 4
     la $a0, newline
     syscall
 
+    # Mostrar AM/PM de la alarma
     li $v0, 4
-    la $a0, prompt
+    la $a0, alarm_am_pm
     syscall
 
-    # Aquí se podrían agregar más líneas para permitir la configuración de la alarma
+    # Imprimir espacio
+    li $v0, 4
+    la $a0, space
+    syscall
+    
+    # Mostrar la hora de la alarma
+    li $v0, 1
+    lw $a0, alarm_hour
+    syscall
+
+    # Mostrar los dos puntos para separar hora y minuto
+    li $v0, 4
+    la $a0, colon
+    syscall
+
+    # Mostrar el minuto de la alarma
+    li $v0, 1
+    lw $a0, alarm_minute
+    syscall
+
     # Regresar al bucle principal
     j main_loop
+
 
 # Función Set
 # Parámetro actual (0: AM/PM, 1: hora, 2: minuto, 3: año, 4: mes, 5: día)
